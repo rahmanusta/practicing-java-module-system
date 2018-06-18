@@ -30,5 +30,7 @@ javac 10.0.1 <2>
 
 Sublime, Atom, Notepad++, or any that you are comfortable with it.
 
+4) Watch the repository so you will be notified with repository updates ;)
+
 See you!
 Rahman
