@@ -369,7 +369,7 @@ After compilation, run non-modular printer-client and verify that it is able to 
 
 [source,bash]
 ----
-java -p dist/printer-impl --add-modules com.printer <1>
+java -p dist/printer-impl --add-modules com.printer.impl <1>
      -cp dist/printer-client com.printer.client.PrinterClient <2>
 ----
 <1> com.printer is added to module path
