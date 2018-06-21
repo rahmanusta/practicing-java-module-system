@@ -1,0 +1,92 @@
+*Practice 6*
+
+If a module want to access to other module’s components, other module have to open or export required packages to caller module.
+
+exports:: Makes packages accessible to other modules at compile time or run time.
+
+opens:: Makes packages accessible to other modules only at run time including access to private members. 
+
+[NOTE]
+====
+[source,java]
+----
+Class<?> clazz = Class.forName("com.printer.impl.Printer"); <1>
+Class<Printer> clazz = Printer.class; <2>
+----
+<1> Access to the class at run-time
+<2> Access to the class at compile time
+
+====
+
+1) Reflective acccess with exports (public method)
+
+[source,bash]
+----
+cd module-reflection-exports
+----
+
+include::__STANDARD_PRINTER_COMPILE.adoc[]
+
+include::__STANDARD_PRINTER_RUN.adoc[]
+
+////
+Hello world!
+////
+
+2) Reflective access with exports (private method)
+
+[source,bash]
+----
+cd module-reflection-exports-private
+----
+
+include::__STANDARD_PRINTER_COMPILE.adoc[]
+
+include::__STANDARD_PRINTER_RUN.adoc[]
+
+////
+Exception in thread "main" java.lang.reflect.InaccessibleObjectException: Unable to make private void com.printer.impl.Printer.print(java.lang.String) accessible: module com.printer.
+impl does not "opens com.printer.impl" to module com.printer.client
+        at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(Unknown Source)
+        at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(Unknown Source)
+        at java.base/java.lang.reflect.Method.checkCanSetAccessible(Unknown Source)
+        at java.base/java.lang.reflect.Method.setAccessible(Unknown Source)
+        at com.printer.client/com.printer.client.PrinterClient.main(PrinterClient.java:10)
+
+////
+
+3) Reflective access with opens (private method)
+
+[source,bash]
+----
+cd module-reflection-opens-private
+----
+
+include::__STANDARD_PRINTER_COMPILE.adoc[]
+
+include::__STANDARD_PRINTER_RUN.adoc[]
+
+////
+Hello world
+////
+
+3) 2) Non-Reflective access with opens (public method)
+
+[source,bash]
+----
+cd module-reflection-opens-public
+----
+
+include::__STANDARD_PRINTER_COMPILE.adoc[]
+
+include::__STANDARD_PRINTER_RUN.adoc[]
+
+////
+We get the error at compile time
+
+printer-client\src\com\printer\client\PrinterClient.java:3: error: package com.printer.impl is not visible
+import com.printer.impl.Printer;
+                  ^
+  (package com.printer.impl is declared in module com.printer.impl, which does not export it)
+1 error
+////

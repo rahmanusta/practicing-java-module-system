@@ -1,3 +1,480 @@
-# Practicing the Java 9 Module System 
+= Practicing the Java Module System
+:doctype: book
+:encoding: utf-8
+:lang: en
+:toc: left
+:force-include:
 
-Practicing the Java 9 Module System - Devoxx PL
+== *Practice 1*: Generate JREs
+
+JLink tool allows you to create different scale of JREs. Every application has different scale, and it is not required to use a module that we don't need!  
+
+[source,bash]
+----
+mkdir generate-image
+cd generate-image
+
+// Run
+generate-images.bat or ./geneate-images.sh
+----
+
+After generation is completed, verify that you have java.base, java.desktop, java.se, and java.se.ee included JREs in the directory. Check folder sizes and add them to your notepad.
+
+== *Practice 2*: Create a hello world module
+
+Create a "Hello world!" module. Compile, Package, and Run it.
+
+1) Get the following directory structure, check the module-info.java and Hello.java classes.
+
+[tree]
+--
+#hello-world
+##src
+###module-info.java
+###com
+####foo
+#####Hello.java
+--
+
+.module-info.java
+[source,java]
+----
+module com.foo {
+    // no definition yet
+}
+----
+
+.com.foo.Hello.java
+[source,java]
+----
+package com.foo;
+
+public class Hello {
+    
+    public static void main(String[] args) {
+        
+        System.out.println("Hello world!"); 
+        
+    }
+    
+}
+----
+
+2) Compile the module artifacts
+
+module-info.java is a module descriptor file. It should be compiled along with other classes in the module.
+
+[source,bash]
+----
+cd hello-world
+javac src/module-info.java src/com/foo/Hello.java -d dist
+----
+
+After compilation, hello-world/dist folder should include compiled module descriptor and Hello.class.
+
+[tree]
+--
+#hello-world
+##dist
+###module-info.class
+###com
+####foo
+#####Hello.class
+--
+
+3) Run the module with dist folder
+
+Add dist directory to the module path to be able to resolve *com.foo* module inside, and run *com.foo.Hello* class inside *com.foo* module.
+
+[source,java]
+----
+java --module-path dist -m com.foo/com.foo.Hello
+// Hello world!
+----
+
+4) Package the modular app
+
+We can package standard Java module as a JAR (Java Archive) file. Then, we call it as modular JAR file.
+
+[source,bash]
+----
+jar --create --file hello.jar --main-class=com.foo.Hello -C dist .
+----
+
+After the jar command completed, verify that you have hello.jar file in the current directory.
+
+5) Run the module with a modular JAR file
+
+We can also add modular JAR files to the --module-path.
+
+[source,bash]
+----
+java --module-path hello.jar -m com.foo/com.foo.Hello
+// Hello world!
+----
+
+6) Link
+
+jlink is a link tool for Java 9. It creates a portable bundle of your application and JRE.
+
+[source,bash]
+----
+jlink --module-path %JAVA_HOME%/jmods;hello.jar --add-modules com.foo --launcher hello=com.foo/com.foo.Hello --output release <1>
+
+jlink --module-path $JAVA_HOME/jmods;hello.jar --add-modules com.foo --launcher hello=com.foo/com.foo.Hello --output release <2>
+----
+<1> For win
+<2> For *nix
+
+After link, you will have a special JRE which has Hello module included. You can run the module with produced launcher.
+
+[source,bash]
+----
+cd release
+bin\hello.bat <1>
+./bin/hello <2>
+----
+<1> for win
+<2> for *nix
+
+== *Practice 3*: Control access between modules 
+
+Let's use `exports` and `requires` keywords to control *access* between modules.
+
+exports:: declares which package(s) will be readable to outside modules.
+requires:: declares which module(s) are needed to read/access.
+
+.module-core directory
+[width="100%",options="header",cols="1a,1a"]
+|====================
+| printer-client module | printer-impl module 
+| 
+
+[tree]
+----
+#printer-client
+##src
+###module-info.java
+###com
+####printer
+#####client
+######PrinterClient.java
+----
+
+| 
+
+[tree]
+----
+#printer-impl
+##src
+###module-info.java
+###com
+####printer
+#####impl
+######Printer.java
+----
+
+|====================
+
+In this practice, you are going to play with exports and requires keywords to understand them easily.
+
+Case 1:: When exports and requires are not declared in module descriptor.
+
+Open `module-core` directory, and check that `printer-client/module-info.java` doesn't include `requires` and `printer-impl/module-info.java` doesn't include `exports` keywords.
+
+Compile printer-impl and printer-client modules, and log that how Java module system prevents access when `exports` and `requires` are missed.
+
+include::__STANDARD_PRINTER_COMPILE.adoc[]
+
+include::__STANDARD_PRINTER_RUN.adoc[]
+
+////
+printer-client\src\com\printer\client\PrinterClient.java:3: error: package com.printer.impl is not visible
+import com.printer.impl.Printer;
+                  ^
+  (package com.printer.impl is declared in module com.printer.impl, but module com.printer.client does not read it)
+1 error
+////
+
+Case2:: When exports declared, but requires is not declared
+
+Update `printer-impl/module-info.java` descriptor file to export `com.printer.impl` package to other modules.
+
+.printer-impl/module-info.java
+[source,java]
+----
+module com.printer.impl {
+    exports com.printer.impl;
+}
+----
+
+Compile printer-impl and printer-client modules, and log that how Java module system prevents access when `requires` is missed.
+
+include::__STANDARD_PRINTER_COMPILE.adoc[]
+
+include::__STANDARD_PRINTER_RUN.adoc[]
+
+////
+printer-client\src\com\printer\client\PrinterClient.java:3: error: package com.printer.impl is not visible
+import com.printer.impl.Printer;
+                  ^
+  (package com.printer.impl is declared in module com.printer.impl, but module com.printer.client does not read it)
+1 error
+////
+
+Case 3:: When requires declared, but exports is not declared
+
+Update `printer-impl/module-info.java` descriptor file to not export any package, and update `printer-client/module-info.java` to require printer-impl module.
+
+.printer-impl/module-info.java
+[source,java]
+----
+module com.printer.impl {
+    
+}
+----
+
+.printer-client/module-info.java
+[source,java]
+----
+module com.printer.client {
+    requires com.printer.impl;
+}
+----
+
+include::__STANDARD_PRINTER_COMPILE.adoc[]
+
+include::__STANDARD_PRINTER_RUN.adoc[]
+
+Compile printer-impl and printer-client modules, and log that how Java module system prevents access when `exports` is missed.
+
+////
+printer-client\src\com\printer\client\PrinterClient.java:3: error: package com.printer.impl is not visible
+import com.printer.impl.Printer;
+                  ^
+  (package com.printer.impl is declared in module com.printer.impl, which does not export it)
+1 error
+////
+
+Case 4:: When both requires and exports are declared
+
+Update `printer-impl/module-info.java` descriptor file to export `com.printer.impl` package, and update `printer-client/module-info.java` to require `com.printer.impl` module.
+
+include::__STANDARD_PRINTER_COMPILE.adoc[]
+
+include::__STANDARD_PRINTER_RUN.adoc[]
+
+Compile printer-impl and printer-client modules, and log that how Java module system controls access among modules successfully.
+
+////
+Success
+////
+
+== *Practice 4*: Using Auto-modules
+
+Auto-modules is designed for smooth migration to the Java module system.
+
+When a non-modular classic JAR file is added to module path (``--module-path`` or ``-p``), then it becomes an auto-module.
+
+[TIP]
+====
+All packages of an auto-module are readable by other modules.
+====
+
+Open `auto-module` directory, and check that there is a non-modular jansi-1.17.1.jar file. Then, edit module descriptors for both printer-client and printer-impl modules.
+
+.printer-client/module.descriptor.java
+[source,java]
+----
+module com.printer.client {
+    requires com.printer.impl;
+}
+----
+
+.printer-impl/module.descriptor.java
+[source,java]
+----
+module com.printer.impl {
+    exports com.printer.impl;
+    
+    requires jansi; <1>
+}
+----
+<1> jansi is a non-modular Jar file and it behaves like a module (auto-module) if it is added to module path. Module name is resolved without version part from the file name.
+
+.Compile modules
+[source,bash]
+----
+javac printer-impl/module-info.java printer-impl/src/com/printer/impl/Printer.java -p lib -d dist/printer-impl
+
+javac printer-client/module-info.java printer-client/src/com/printer/client/PrinterClient.java -p dist/printer-impl;lib -d dist/printer-client
+----
+
+.Run modules
+[source,bash]
+----
+java --module-path dist;lib  -m com.printer.client/com.printer.client.PrinterClient
+----
+
+After compile, run the auto-module app, verify that console output is colored with jansi library.
+
+== *Practice 5*: Using Unnamed modules
+
+In this practice, you are going to test access from an unnamed module to a module.
+
+Open `unnamed-module` folder, and check that `printer-client` module doesn't have a module descriptor file, and compile the modules.
+
+[source,bash]
+----
+javac src/module-info.java src/com/printer/impl/Printer.java -d dist/printer-impl <1>
+
+javac src/com/printer/client/PrinterClient.java -d dist/printer-client <2>
+----
+<1> Compile printer-impl module
+<2> Compile printer-client without module-info.java
+
+After compilation, run non-modular printer-client and verify that it is able to access exported packages.
+
+[source,bash]
+----
+java -p dist/printer-impl --add-modules com.printer <1>
+     -cp dist/printer-client com.printer.client.PrinterClient <2>
+----
+<1> com.printer is added to module path
+<2> printer-client is added to classpath
+
+// include::OPEN_ACCESS_OPTIONAL.adoc[]
+
+== *Practice 6*:: Testing HTTP/2 Client API
+
+In this practice you are going to run a HTTP/2 server featured with Spring Boot + Undertow and a modular HTTP/2 client application to test the HTTP/2 Client API.
+
+Open `http2/http-server` folder and run the following.
+
+[source,bash]
+----
+mvnw clean spring-boot:run <1>
+./mvnw clean spring-boot:run <2>
+----
+<1> For windows
+<2> For *nix
+
+Server application listens on https://127.0.0.1:8443 and has simple logic to respond to the HTTP/2 client.
+
+.HelloController.java
+[source,java]
+----
+@RestController
+public class HelloController {
+
+    @GetMapping("/get")
+    public String get() {
+        return "Hello world!";
+    }
+
+    @PostMapping("/post")
+    public String post(@RequestBody String body) {
+        return isNull(body) ? "Hello world!" : body;
+    }
+}
+----
+
+HTTP/2 protocols forces to use SSL certificates. In application folder you will see ``http2.keystore``, and it can be used for both server and client applications.
+
+On the server side, the keystore can be registered in Spring Boot's application.properties file.
+
+[source,properties]
+----
+server.ssl.key-store=classpath:http2.keystore
+server.ssl.key-store-password=123456
+server.ssl.key-alias=http2
+
+server.http2.enabled=true
+
+server.port=8443
+----
+
+In the client application, we have two simple clasess GetClient and PostClient. They simple requests to the HTTP/2 server we run in previous step and makes HTTP Get or Post requests.
+
+Let's build the client application.
+
+[source,bash]
+----
+javac src/module-info.java src/com/kodedu/http2/client/GetClient.java src/com/kodedu/http2/client/PostClient.java -d dist
+----
+
+Let's run the GetClient with required trustStore arguments.
+
+[source,bash]
+----
+java --module-path dist -Djavax.net.ssl.trustStore="src/resources/http2.keystore" -Djavax.net.ssl.trustStorePassword=123456 -m com.kodedu.httpTwo/com.kodedu.http2.client.GetClient
+----
+
+After run, verify that version information, http status code, and response body correctly printed.
+
+Repeat the same operation for PostClient, and see that it successfully handles Http Post requests.
+
+[NOTE]
+====
+HTTP/2 API practice needs SSL keystore. If you want to generate your own keystore follow the instruction below.
+
+.Generates keystore
+[source,bash]
+----
+keytool -genkeypair -alias http2 -keyalg RSA -keysize 2048 -keystore http2.keystore -validity 3650
+----
+
+.Answer questions asked during keystore generation
+----
+Enter keystore password:
+Re-enter new password:
+What is your first and last name?
+  [Unknown]:  Rahman Usta
+What is the name of your organizational unit?
+  [Unknown]:
+What is the name of your organization?
+  [Unknown]:
+What is the name of your City or Locality?
+  [Unknown]:
+What is the name of your State or Province?
+  [Unknown]:
+What is the two-letter country code for this unit?
+  [Unknown]:
+Is CN=Rahman Usta, OU=Unknown, O=Unknown, L=Unknown, ST=Unknown, C=Unknown correct?
+  [no]:  yes
+
+----
+
+====
+
+== *Practice 7*: Testing JSHell
+
+JShell is a REPL tool for the Java platform.
+
+[source,bash]
+----
+jshell
+
+|  Welcome to JShell -- Version 10.0.1
+|  For an introduction type: /help intro
+jshell>
+jshell> 3 + 5 
+jshell> /exit
+----
+
+Create a Calculator class and call it's methods in JShell terminal.
+
+[source,java]
+----
+public class Calculator {
+    
+    public int sum(int a, int b) {
+        return a+b;
+    }
+    
+    // ...
+
+}
+----
+
+The end.

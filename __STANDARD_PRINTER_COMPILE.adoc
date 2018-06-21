@@ -1,0 +1,9 @@
+.Compile modules
+[source,bash]
+----
+javac printer-impl/module-info.java printer-impl/src/com/printer/impl/Printer.java -d dist/printer-impl <1>
+
+javac printer-client/module-info.java printer-client/src/com/printer/client/PrinterClient.java -p dist/printer-impl -d dist/printer-client <2>
+----
+<1> Compile printer-impl
+<2> Compile printer-client
