@@ -134,7 +134,7 @@ jlink is a link tool for Java 9. It creates a portable bundle of your applicatio
 ----
 jlink --module-path %JAVA_HOME%/jmods;hello.jar --add-modules com.foo --launcher hello=com.foo/com.foo.Hello --output release <1>
 
-jlink --module-path $JAVA_HOME/jmods;hello.jar --add-modules com.foo --launcher hello=com.foo/com.foo.Hello --output release <2>
+jlink --module-path $JAVA_HOME/jmods:hello.jar --add-modules com.foo --launcher hello=com.foo/com.foo.Hello --output release <2>
 ----
 <1> For win
 <2> For *nix
