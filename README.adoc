@@ -5,7 +5,12 @@
 :toc: left
 :force-include:
 
-To start hands-on lab session, first you should clone the https://github.com/rahmanusta/practicing-java9-module-system[repository] or download as zip file here https://github.com/rahmanusta/practicing-java9-module-system/archive/master.zip
+To start hands-on lab session, first you should clone the https://github.com/rahmanusta/practicing-java9-module-system[repository] or download zipped version here https://github.com/rahmanusta/practicing-java9-module-system/archive/master.zip
+
+[NOTE]
+====
+Attendees who want to practice should install required tools in advance link:WORKSHOP_REQUIREMENTS[] .
+====
 
 ////
 Slide show is accessible here
@@ -26,7 +31,7 @@ cd generate-image
 generate-images.bat or ./geneate-images.sh
 ----
 
-After generation is completed, verify that you have java.base, java.desktop, java.se, and java.se.ee included JREs in the directory. Check folder sizes and add them to your notepad.
+After generation is completed, verify that you have ``java.base``, ``java.desktop``, ``java.se``, and ``java.se.ee`` included JREs in the directory. Check folder sizes and add them to your notepad.
 
 == *Practice 2*: Create a hello world module
 
