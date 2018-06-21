@@ -360,7 +360,7 @@ Open `unnamed-module` folder, and check that `printer-client` module doesn't hav
 ----
 javac module-info.java src/com/printer/impl/Printer.java -d dist/printer-impl <1>
 
-javac src/com/printer/client/PrinterClient.java -d dist/printer-client <2>
+javac src/com/printer/client/PrinterClient.java -d dist/printer-client -cp ../printer-impl/dist/printer-impl <2>
 ----
 <1> Compile printer-impl module
 <2> Compile printer-client without module-info.java
