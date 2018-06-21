@@ -5,6 +5,14 @@
 :toc: left
 :force-include:
 
+To start hands-on lab session, first you should clone the https://github.com/rahmanusta/practicing-java9-module-system[repository] or download as zip file here https://github.com/rahmanusta/practicing-java9-module-system/archive/master.zip
+
+////
+Slide show is accessible here
+
+https://docs.google.com/presentation/d/1nZpErxa8OC3_uaKBX4sCDUryLTz5FS7aXmnvydLYyeE/edit?usp=sharing
+////
+
 == *Practice 1*: Generate JREs
 
 JLink tool allows you to create different scale of JREs. Every application has different scale, and it is not required to use a module that we don't need!  
@@ -394,7 +402,7 @@ server.http2.enabled=true
 server.port=8443
 ----
 
-In the client application, we have two simple clasess GetClient and PostClient. They simple requests to the HTTP/2 server we run in previous step and makes HTTP Get or Post requests.
+In the client application, we have two simple classes `GetClient` and ``PostClient``. They simple requests to the HTTP/2 server we run in previous step and makes HTTP Get or Post requests.
 
 Let's build the client application.
 
@@ -403,16 +411,16 @@ Let's build the client application.
 javac src/module-info.java src/com/kodedu/http2/client/GetClient.java src/com/kodedu/http2/client/PostClient.java -d dist
 ----
 
-Let's run the GetClient with required trustStore arguments.
+Then run the GetClient with required [underline]#trustStore# arguments.
 
 [source,bash]
 ----
 java --module-path dist -Djavax.net.ssl.trustStore="src/resources/http2.keystore" -Djavax.net.ssl.trustStorePassword=123456 -m com.kodedu.httpTwo/com.kodedu.http2.client.GetClient
 ----
 
-After run, verify that version information, http status code, and response body correctly printed.
+After run, verify that version information (HTTP_2), http status code (200), and response body correctly printed.
 
-Repeat the same operation for PostClient, and see that it successfully handles Http Post requests.
+Repeat the same operation for ``PostClient``, and see that it successfully handles Http Post requests.
 
 [NOTE]
 ====
@@ -478,3 +486,7 @@ public class Calculator {
 ----
 
 The end.
+
+== License
+
+MIT
