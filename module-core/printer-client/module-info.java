@@ -1,0 +1,3 @@
+module com.printer.client {
+
+}
