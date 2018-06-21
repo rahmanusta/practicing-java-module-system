@@ -339,7 +339,7 @@ Open `unnamed-module` folder, and check that `printer-client` module doesn't hav
 
 [source,bash]
 ----
-javac src/module-info.java src/com/printer/impl/Printer.java -d dist/printer-impl <1>
+javac module-info.java src/com/printer/impl/Printer.java -d dist/printer-impl <1>
 
 javac src/com/printer/client/PrinterClient.java -d dist/printer-client <2>
 ----
