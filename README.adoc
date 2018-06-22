@@ -134,7 +134,7 @@ jlink is a link tool for Java 9. It creates a portable bundle of your applicatio
 ----
 jlink --module-path %JAVA_HOME%/jmods;hello.jar --add-modules com.foo --launcher hello=com.foo/com.foo.Hello --output release <1>
 
-jlink --module-path $JAVA_HOME/jmods;hello.jar --add-modules com.foo --launcher hello=com.foo/com.foo.Hello --output release <2>
+jlink --module-path $JAVA_HOME/jmods:hello.jar --add-modules com.foo --launcher hello=com.foo/com.foo.Hello --output release <2>
 ----
 <1> For win
 <2> For *nix
@@ -315,6 +315,25 @@ module com.printer.impl {
 ----
 <1> jansi is a non-modular Jar file and it behaves like a module (auto-module) if it is added to module path. Module name is resolved without version part from the file name.
 
+[source,java]
+----
+package com.printer.impl;
+
+import org.fusesource.jansi.AnsiConsole;
+
+import static org.fusesource.jansi.Ansi.Color.BLUE;
+import static org.fusesource.jansi.Ansi.Color.RED;
+import static org.fusesource.jansi.Ansi.ansi;
+
+public class Printer {
+    public void print(String message) {
+        AnsiConsole.systemInstall();
+        System.out.println(ansi().fg(BLUE).a("This is a colored output!"));
+        System.out.println(ansi().fg(RED).a(message));
+    }
+}
+----
+
 .Compile modules
 [source,bash]
 ----
@@ -339,9 +358,9 @@ Open `unnamed-module` folder, and check that `printer-client` module doesn't hav
 
 [source,bash]
 ----
-javac src/module-info.java src/com/printer/impl/Printer.java -d dist/printer-impl <1>
+javac module-info.java src/com/printer/impl/Printer.java -d dist/printer-impl <1>
 
-javac src/com/printer/client/PrinterClient.java -d dist/printer-client <2>
+javac src/com/printer/client/PrinterClient.java -d dist/printer-client -cp ../printer-impl/dist/printer-impl <2>
 ----
 <1> Compile printer-impl module
 <2> Compile printer-client without module-info.java
@@ -350,7 +369,7 @@ After compilation, run non-modular printer-client and verify that it is able to 
 
 [source,bash]
 ----
-java -p dist/printer-impl --add-modules com.printer <1>
+java -p dist/printer-impl --add-modules com.printer.impl <1>
      -cp dist/printer-client com.printer.client.PrinterClient <2>
 ----
 <1> com.printer is added to module path
