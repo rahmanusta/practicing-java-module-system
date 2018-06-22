@@ -5,18 +5,20 @@
 :toc: left
 :force-include:
 
-To start hands-on lab session, first you should clone the https://github.com/rahmanusta/practicing-java9-module-system[repository] or download zipped version here https://github.com/rahmanusta/practicing-java9-module-system/archive/master.zip
+To start hands-on lab session, first you should clone the https://github.com/rahmanusta/practicing-java9-module-system[repository] or download the zipped version here https://github.com/rahmanusta/practicing-java9-module-system/archive/master.zip
 
 [NOTE]
 ====
-Attendees who want to practice should install required tools in advance link:WORKSHOP_REQUIREMENTS[] .
+. Attendees who want to practice should install required tools in advance link:WORKSHOP_REQUIREMENTS[] .
+
+. t is an open workshop, you can hold an event in your user group or company.
 ====
 
 ////
 Slide show is accessible here
 
 https://docs.google.com/presentation/d/1nZpErxa8OC3_uaKBX4sCDUryLTz5FS7aXmnvydLYyeE/edit?usp=sharing
-////
+//// 
 
 == *Practice 1*: Generate JREs
 
@@ -392,6 +394,11 @@ mvnw clean spring-boot:run <1>
 <1> For windows
 <2> For *nix
 
+[TIP]
+====
+Be sure you have correct configuration in the application.properties file.
+====
+
 Server application listens on https://127.0.0.1:8443 and has simple logic to respond to the HTTP/2 client.
 
 .HelloController.java
@@ -478,11 +485,11 @@ Is CN=Rahman Usta, OU=Unknown, O=Unknown, L=Unknown, ST=Unknown, C=Unknown corre
 
 ----
 
-====
+==== 
 
 == *Practice 7*: Testing JSHell
 
-JShell is a REPL tool for the Java platform.
+JShell is a REPL tool for the Java platform. You can also use https://tryjshell.org for online JShell!
 
 [source,bash]
 ----
@@ -490,7 +497,7 @@ jshell
 
 |  Welcome to JShell -- Version 10.0.1
 |  For an introduction type: /help intro
-jshell>
+jshell> /help
 jshell> 3 + 5 
 jshell> /exit
 ----
@@ -514,5 +521,4 @@ The end.
 
 == License
 
-
-MIT
+https://opensource.org/licenses/MIT[MIT]

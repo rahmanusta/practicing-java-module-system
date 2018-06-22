@@ -26,11 +26,22 @@ javac 10.0.1 <2>
 <1> Check javac version
 <2> Be sure you have 9+
 
+[CAUTION]
+====
+I saw in the previous practices, some attendees checked `java -version` but not `javac -version`. Be sure that both print 9+ version.
+====
+
+3) Set JAVA_HOME system variable
+
+Set JAVA_HOME system variable properly or use direct path where it is used. We use it in the generate-image scripts.
+
 3) Your favorite text editor
 
-Sublime, Atom, Notepad++, or any that you are comfortable with it.
+Sublime, Atom, Notepad++, or any that you are comfortable with it. Some examples includes maven projects, but you don't need to install maven thanks to the maven wrapper.
 
 4) Watch the repository so you will be notified with repository updates ;)
+
+5) Any contribution is welcomed, don't be shy for pull requests :)
 
 See you!
 Rahman
