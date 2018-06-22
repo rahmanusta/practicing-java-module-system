@@ -1,0 +1,9 @@
+.idea/
+*.iml
+
+generate-image/java.base
+generate-image/java.desktop
+generate-image/java.se
+generate-image/java.se.ee
+target/
+dist/
