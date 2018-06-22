@@ -358,18 +358,19 @@ Open `unnamed-module` folder, and check that `printer-client` module doesn't hav
 
 [source,bash]
 ----
-javac module-info.java src/com/printer/impl/Printer.java -d dist/printer-impl <1>
+javac printer-impl/module-info.java printer-impl/src/com/printer/impl/Printer.java -d dist/printer-impl <1>
 
-javac src/com/printer/client/PrinterClient.java -d dist/printer-client -cp ../printer-impl/dist/printer-impl <2>
+javac printer-client/src/com/printer/client/PrinterClient.java -p dist/printer-impl --add-modules c
+om.printer.impl -d dist/printer-client <2>
 ----
 <1> Compile printer-impl module
 <2> Compile printer-client without module-info.java
 
-After compilation, run non-modular printer-client and verify that it is able to access exported packages.
+After compilation, run non-modular printer-client and verify that it is able to access exported packages from unnamed module.
 
 [source,bash]
 ----
-java -p dist/printer-impl --add-modules com.printer.impl <1>
+java -p dist/printer-impl --add-modules com.printer.impl <1> 
      -cp dist/printer-client com.printer.client.PrinterClient <2>
 ----
 <1> com.printer is added to module path
