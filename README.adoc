@@ -357,7 +357,7 @@ After compile, run the auto-module app, verify that console output is colored wi
 
 In this practice, you are going to test access from an unnamed module to a module.
 
-Open `unnamed-module` folder, and check that `printer-client` module doesn't have a module descriptor file, and compile the modules.
+Open `unnamed-module` folder, and check that `printer-client` module doesn't have a module descriptor file, and compile it as a non-module, and the printer-impl module.
 
 [source,bash]
 ----
