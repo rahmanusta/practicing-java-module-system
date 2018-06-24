@@ -16,7 +16,7 @@ To start hands-on lab session, first you should clone the https://github.com/rah
 
 [NOTE]
 ====
-Presentation is accessible here.
+Presentation is accessible here. If you need an editable version of it, just send an email to rahmanusta@kodedu.com
 
 https://docs.google.com/presentation/d/1nZpErxa8OC3_uaKBX4sCDUryLTz5FS7aXmnvydLYyeE/edit?usp=sharing
 ====
