@@ -42,14 +42,14 @@ Create a "Hello world!" module. Compile, Package, and Run it.
 1) Get the following directory structure, check the module-info.java and Hello.java classes.
 
 [tree]
---
+----
 #hello-world
 ##src
 ###module-info.java
 ###com
 ####foo
 #####Hello.java
---
+----
 
 .module-info.java
 [source,java]
@@ -88,14 +88,14 @@ javac src/module-info.java src/com/foo/Hello.java -d dist
 After compilation, hello-world/dist folder should include compiled module descriptor and Hello.class.
 
 [tree]
---
+----
 #hello-world
 ##dist
 ###module-info.class
 ###com
 ####foo
 #####Hello.class
---
+----
 
 3) Run the module with dist folder
 
