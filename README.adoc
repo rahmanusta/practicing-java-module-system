@@ -11,7 +11,7 @@ To start hands-on lab session, first you should clone the https://github.com/rah
 ====
 . Attendees who want to practice should install required tools in advance link:WORKSHOP_REQUIREMENTS[] .
 
-. t is an open workshop, you can hold an event in your user group or company.
+. It is an open workshop, you can hold an event in your user group or company.
 ====
 
 [NOTE]
