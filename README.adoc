@@ -14,11 +14,12 @@ To start hands-on lab session, first you should clone the https://github.com/rah
 . t is an open workshop, you can hold an event in your user group or company.
 ====
 
-////
-Slide show is accessible here
+[NOTE]
+====
+Presentation is accessible here.
 
 https://docs.google.com/presentation/d/1nZpErxa8OC3_uaKBX4sCDUryLTz5FS7aXmnvydLYyeE/edit?usp=sharing
-//// 
+====
 
 == *Practice 1*: Generate JREs
 
