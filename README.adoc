@@ -1,4 +1,4 @@
-= Practicing the Java Module System
+= Practising the Java Module System
 :doctype: book
 :encoding: utf-8
 :lang: en
@@ -23,7 +23,7 @@ https://docs.google.com/presentation/d/1nZpErxa8OC3_uaKBX4sCDUryLTz5FS7aXmnvydLY
 
 == *Practice 1*: Generate JREs
 
-JLink tool allows you to create different scale of JREs. Every application has different scale, and it is not required to use a module that we don't need!  
+JLink tool allows you to create different scale of JREs. Every application has different scale, and it is not required to use a module that we don't need!
 
 [source,bash]
 ----
@@ -31,16 +31,16 @@ mkdir generate-image
 cd generate-image
 
 // Run
-generate-images.bat or ./geneate-images.sh
+generate-images.bat or ./generate-images.sh
 ----
 
-After generation is completed, verify that you have ``java.base``, ``java.desktop``, ``java.se``, and ``java.se.ee`` included JREs in the directory. Check folder sizes and add them to your notepad.
+After generation is completed, verify that you have ``java.base``, ``java.desktop``, ``java.se``, and ``java.se.ee`` included JREs in the directory. Check folder sizes (with ``du -sh``) and add them to your notepad.
 
 == *Practice 2*: Create a hello world module
 
 Create a "Hello world!" module. Compile, Package, and Run it.
 
-1) Get the following directory structure, check the module-info.java and Hello.java classes.
+1) Get the following directory structure, check the ``module-info.java`` and ``Hello.java`` classes.
 
 [tree]
 ----
@@ -66,19 +66,17 @@ module com.foo {
 package com.foo;
 
 public class Hello {
-    
+
     public static void main(String[] args) {
-        
-        System.out.println("Hello world!"); 
-        
+        System.out.println("Hello world!");
     }
-    
+
 }
 ----
 
-2) Compile the module artifacts
+2) Compile the module artefacts
 
-module-info.java is a module descriptor file. It should be compiled along with other classes in the module.
+``module-info.java`` is a module descriptor file. It should be compiled along with other classes in the module.
 
 [source,bash]
 ----
@@ -86,7 +84,7 @@ cd hello-world
 javac src/module-info.java src/com/foo/Hello.java -d dist
 ----
 
-After compilation, hello-world/dist folder should include compiled module descriptor and Hello.class.
+After compilation, ``hello-world/dist`` folder should include compiled module descriptor and ``Hello.class``.
 
 [tree]
 ----
@@ -98,9 +96,9 @@ After compilation, hello-world/dist folder should include compiled module descri
 #####Hello.class
 ----
 
-3) Run the module with dist folder
+3) Run the module with ``dist`` folder
 
-Add dist directory to the module path to be able to resolve *com.foo* module inside, and run *com.foo.Hello* class inside *com.foo* module.
+Add ``dist`` directory to the module path to be able to resolve *com.foo* module inside, and run *com.foo.Hello* class inside *com.foo* module.
 
 [source,java]
 ----
@@ -117,7 +115,7 @@ We can package standard Java module as a JAR (Java Archive) file. Then, we call 
 jar --create --file hello.jar --main-class=com.foo.Hello -C dist .
 ----
 
-After the jar command completed, verify that you have hello.jar file in the current directory.
+After the jar command completed, verify that you have ``hello.jar`` file in the current directory.
 
 5) Run the module with a modular JAR file
 
@@ -135,7 +133,7 @@ jlink is a link tool for Java 9. It creates a portable bundle of your applicatio
 
 [source,bash]
 ----
-jlink --module-path %JAVA_HOME%/jmods;hello.jar --add-modules com.foo --launcher hello=com.foo/com.foo.Hello --output release <1>
+jlink --module-path "%JAVA_HOME%/jmods;hello.jar" --add-modules com.foo --launcher hello=com.foo/com.foo.Hello --output release <1>
 
 jlink --module-path $JAVA_HOME/jmods:hello.jar --add-modules com.foo --launcher hello=com.foo/com.foo.Hello --output release <2>
 ----
@@ -153,7 +151,9 @@ bin\hello.bat <1>
 <1> for win
 <2> for *nix
 
-== *Practice 3*: Control access between modules 
+Check out the ``hello`` executable.
+
+== *Practice 3*: Control access between modules
 
 Let's use `exports` and `requires` keywords to control *access* between modules.
 
@@ -163,8 +163,8 @@ requires:: declares which module(s) are needed to read/access.
 .module-core directory
 [width="100%",options="header",cols="1a,1a"]
 |====================
-| printer-client module | printer-impl module 
-| 
+| printer-client module | printer-impl module
+|
 
 [tree]
 ----
@@ -177,7 +177,7 @@ requires:: declares which module(s) are needed to read/access.
 ######PrinterClient.java
 ----
 
-| 
+|
 
 [tree]
 ----
@@ -192,7 +192,7 @@ requires:: declares which module(s) are needed to read/access.
 
 |====================
 
-In this practice, you are going to play with exports and requires keywords to understand them easily.
+In this practice, you are going to play with ``exports`` and ``requires`` keywords to understand them easily.
 
 Case 1:: When exports and requires are not declared in module descriptor.
 
@@ -224,7 +224,7 @@ module com.printer.impl {
 }
 ----
 
-Compile printer-impl and printer-client modules, and log that how Java module system prevents access when `requires` is missed.
+Compile ``printer-impl`` and ``printer-client`` modules, and log that how Java module system prevents access when `requires` is missed.
 
 include::__STANDARD_PRINTER_COMPILE.adoc[]
 
@@ -246,7 +246,7 @@ Update `printer-impl/module-info.java` descriptor file to not export any package
 [source,java]
 ----
 module com.printer.impl {
-    
+
 }
 ----
 
@@ -262,7 +262,7 @@ include::__STANDARD_PRINTER_COMPILE.adoc[]
 
 include::__STANDARD_PRINTER_RUN.adoc[]
 
-Compile printer-impl and printer-client modules, and log that how Java module system prevents access when `exports` is missed.
+Compile ``printer-impl`` and ``printer-client`` modules, and log that how Java module system prevents access when `exports` is missed.
 
 ////
 printer-client\src\com\printer\client\PrinterClient.java:3: error: package com.printer.impl is not visible
@@ -297,9 +297,9 @@ When a non-modular classic JAR file is added to module path (``--module-path`` o
 All packages of an auto-module are readable by other modules.
 ====
 
-Open `auto-module` directory, and check that there is a non-modular jansi-1.17.1.jar file. Then, edit module descriptors for both printer-client and printer-impl modules.
+Open `auto-module` directory, and check that there is a non-modular ``jansi-1.17.1.jar`` file. Then, edit module descriptors for both ``printer-client`` and ``printer-impl`` modules.
 
-.printer-client/module.descriptor.java
+.printer-client/module-info.java
 [source,java]
 ----
 module com.printer.client {
@@ -307,16 +307,16 @@ module com.printer.client {
 }
 ----
 
-.printer-impl/module.descriptor.java
+.printer-impl/module-info.java
 [source,java]
 ----
 module com.printer.impl {
     exports com.printer.impl;
-    
+
     requires jansi; <1>
 }
 ----
-<1> jansi is a non-modular Jar file and it behaves like a module (auto-module) if it is added to module path. Module name is resolved without version part from the file name.
+<1> ``jansi`` is a non-modular Jar file and it behaves like a module (auto-module) if it is added to module path. Module name is resolved without version part from the file name.
 
 [source,java]
 ----
@@ -348,16 +348,16 @@ javac printer-client/module-info.java printer-client/src/com/printer/client/Prin
 .Run modules
 [source,bash]
 ----
-java --module-path dist;lib  -m com.printer.client/com.printer.client.PrinterClient
+java --module-path dist;lib -m com.printer.client/com.printer.client.PrinterClient
 ----
 
-After compile, run the auto-module app, verify that console output is colored with jansi library.
+After compile, run the auto-module app, verify that console output is coloured with jansi library.
 
 == *Practice 5*: Using Unnamed modules
 
 In this practice, you are going to test access from an unnamed module to a module.
 
-Open `unnamed-module` folder, and check that `printer-client` module doesn't have a module descriptor file, and compile it as a non-module, and the printer-impl module.
+Open `unnamed-module` folder, and check that `printer-client` module doesn't have a module descriptor file, and compile it as a non-module, and the `printer-impl` module.
 
 [source,bash]
 ----
@@ -367,17 +367,17 @@ javac printer-client/src/com/printer/client/PrinterClient.java -p dist/printer-i
 om.printer.impl -d dist/printer-client <2>
 ----
 <1> Compile printer-impl module
-<2> Compile printer-client without module-info.java
+<2> Compile printer-client without ``module-info.java``
 
-After compilation, run non-modular printer-client and verify that it is able to access exported packages from unnamed module.
+After compilation, run non-modular `printer-client` and verify that it is able to access exported packages from unnamed module.
 
 [source,bash]
 ----
-java -p dist/printer-impl --add-modules com.printer.impl <1> 
+java --module-path dist --add-modules com.printer.impl <1>
      -cp dist/printer-client com.printer.client.PrinterClient <2>
 ----
-<1> com.printer is added to module path
-<2> printer-client is added to classpath
+<1> ``com.printer.impl`` is added to module path
+<2> ``printer-client`` is added to classpath
 
 // include::OPEN_ACCESS_OPTIONAL.adoc[]
 
@@ -486,9 +486,9 @@ Is CN=Rahman Usta, OU=Unknown, O=Unknown, L=Unknown, ST=Unknown, C=Unknown corre
 
 ----
 
-==== 
+====
 
-== *Practice 7*: Testing JSHell
+== *Practice 7*: Testing JShell
 
 JShell is a REPL tool for the Java platform. You can also use https://tryjshell.org for online JShell!
 
@@ -499,7 +499,7 @@ jshell
 |  Welcome to JShell -- Version 10.0.1
 |  For an introduction type: /help intro
 jshell> /help
-jshell> 3 + 5 
+jshell> 3 + 5
 jshell> /exit
 ----
 
@@ -508,11 +508,11 @@ Create a Calculator class and call it's methods in JShell terminal.
 [source,java]
 ----
 public class Calculator {
-    
+
     public int sum(int a, int b) {
         return a+b;
     }
-    
+
     // ...
 
 }
