@@ -1,10 +1,10 @@
 *Practice 6*
 
-If a module want to access to other module’s components, other module have to open or export required packages to caller module.
+If a module want to access to other module's components, other module have to open or export required packages to caller module.
 
 exports:: Makes packages accessible to other modules at compile time or run time.
 
-opens:: Makes packages accessible to other modules only at run time including access to private members. 
+opens:: Makes packages accessible to other modules only at run time including access to private members.
 
 [NOTE]
 ====
@@ -18,7 +18,7 @@ Class<Printer> clazz = Printer.class; <2>
 
 ====
 
-1) Reflective acccess with exports (public method)
+1) Reflective access with exports (public method)
 
 [source,bash]
 ----
